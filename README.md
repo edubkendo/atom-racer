@@ -1,5 +1,13 @@
-# racer package
+# Racer
 
-A short description of your package.
+Providing intelligent code completion for Rust, via [Racer](https://github.com/phildawes/racer) and using [Autocomplete+](https://github.com/saschagehlich/autocomplete-plus).
 
-![A screenshot of your spankin' package](https://f.cloud.github.com/assets/69169/2290250/c35d867a-a017-11e3-86be-cd7c5bf3ff9b.gif)
+### Installation
+
+First, ensure you have both [Racer](https://github.com/phildawes/racer) and [Autocomplete+](https://github.com/saschagehlich/autocomplete-plus) properly installed. Then install this package via Atom's package manager.
+
+### Usage
+
+Completion is triggered with the first letter you type after typing `::`.
+
+![A screenshot of your spankin' package](./racer.gif)
