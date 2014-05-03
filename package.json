@@ -1,0 +1,20 @@
+{
+  "name": "racer",
+  "main": "./lib/racer",
+  "version": "0.0.0",
+  "description": "Intelligent Rust code completion.",
+  "repository": "https://github.com/edubkendo/racer",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+    "underscore-plus": "~1.1.2",
+    "autocomplete-plus": "git://github.com/saschagehlich/autocomplete-plus.git#feature/api",
+    "fs-plus": "2.x",
+    "async": "~0.7.0",
+    "pathwatcher": "~1.2.0",
+    "fuzzaldrin": "~1.0.0",
+    "tmp": "*"
+  }
+}
