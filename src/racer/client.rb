@@ -42,33 +42,15 @@ module Racer
 
       last_char = tbuffer.getTextInRange([[row, col -2], [row, col]])
 
-      if last_char =~ /::/
-        #cb.call(`[new Suggestion(this, {word: "cool", label: "awesome"})]`)
-        completions @editor, row, col, -> suggestions {
-          cb.call( `null`, suggestions.to_n)
-        }
-      else
-        cb.call(`null`,`[]`)
-      end
+      completions @editor, row, col, -> suggestions {
+        cb.call( `null`, suggestions.to_n)
+      }
+
     end
 
     def parse_single(line)
       if matches = line.match(/^MATCH (\w*)\,/)
         matches.captures.first
-      end
-    end
-
-    def parse_completions(output)
-      output.split("\n").map {|line|
-        if matches = line.match(/^MATCH (\w*)\,/)
-          matches.captures.first
-        end
-      }.compact
-    end
-
-    def arrange_suggestions(candidates)
-      candidates.map do |candidate|
-        Native(`new Suggestion(this, { word: #{candidate}, label: #{candidate} })`)
       end
     end
 

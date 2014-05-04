@@ -8,6 +8,5 @@ First, ensure you have both [Racer](https://github.com/phildawes/racer) and [Aut
 
 ### Usage
 
-Completion is triggered with the first letter you type after typing `::`.
 
 ![A screenshot of your spankin' package](./racer.gif)

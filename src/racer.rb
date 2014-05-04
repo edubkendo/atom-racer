@@ -14,22 +14,6 @@ module Racer
       @providers = []
     end
 
-    def register_providers
-      workspace_view = Native(@atom.workspace_view)
-      workspace_view.eachEditorView -> editorView {
-        editorView = Native(`#{editorView}`)
-        editor = editorView.editor
-        editor.on "grammar-changed", -> {
-          if editor.getGrammar().name =~ /Rust/ && !editorView.mini
-            view = workspace_view.getActiveView()
-            `RacerProvider = require("../racer-provider")`
-            provider = `new RacerProvider(#{editorView})`
-            @autocomplete.registerProviderForEditorView(provider, editorView.to_n)
-          end
-        }
-      }
-    end
-
     def add_provider(provider)
       nprovider = Native(provider)
       @providers << nprovider
