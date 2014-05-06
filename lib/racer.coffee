@@ -14,6 +14,10 @@ _ = require "underscore-plus"
 {ProviderPackageFactory} = require "autocomplete-plus"
 
 module.exports =
+  configDefaults:
+    rustSrcPath: "/usr/local/src/rust/src"
+    racerBinPath: "/usr/local/bin/racer"
+
   editorSubscription: null
   providers: []
   autocomplete: null

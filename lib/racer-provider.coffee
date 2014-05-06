@@ -9,7 +9,7 @@ class RacerProvider extends Provider
     aeditor.getBuffer().on "contents-modified", (e) =>
       @fetchCompletions()
 
-  wordRegex: /(\b\w*[a-zA-Z_]\w*\b|::\b\w*[a-zA-Z_]\w*\b)/g
+  wordRegex: /(\b\w*[a-zA-z1-9:.]\w*\b|[a-zA-z1-9:.])/g
   buildSuggestions: ->
     selection = @editor?.getSelection()
     prefix = @prefixOfSelection selection
@@ -26,7 +26,7 @@ class RacerProvider extends Provider
 
   findSuggestionsForPrefix: (prefix) ->
     # Get rid of the leading @
-    prefix = prefix.replace /^::/, ''
+    #prefix = prefix.replace /^::/, ''
 
     # Filter the words using fuzzaldrin
     if @completions?.length

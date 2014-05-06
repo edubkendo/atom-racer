@@ -3,10 +3,17 @@ require "atom/file"
 module Racer
   class Client
     `Suggestion = require("autocomplete-plus").Suggestion`
-    attr_accessor :atom, :editor, :text, :tempfile, :file, :filepath, :candidates
+    attr_accessor :atom, :editor, :text, :tempfile, :file, :filepath, :candidates, :settings
 
     def initialize(atom)
       @atom = atom
+      @settings = @atom.config.settings
+    end
+
+    def process_env_vars
+      @rust_src = @rust_src || @settings.racer.rustSrcPath
+      @project_path = @project_path || @atom.project.getPath()
+      [@rust_src, @project_path]
     end
 
     def completions(editor, row, col, cb)
@@ -16,15 +23,16 @@ module Racer
         @tempfile = tempfile
         @text = @editor.getText
         @tempfile.write(@text)
-        `process.env.RUST_SRC_PATH = "/Users/ericwest/installs/rust/src/"`
+        rust_src, project_path = process_env_vars()
+        `process.env.RUST_SRC_PATH = "/Users/ericwest/installs/rust/src/:/Users/ericwest/code/rust"`
 
-        command = "/Users/ericwest/git/community/racer/bin/racer"
+        racer_bin = @settings.racer.racerBinPath
+        command = "#{racer_bin}"
         args = ["complete", row + 1, col, @filepath]
         stdout = -> output {
           parsed = parse_single(output)
           @candidates << parsed if parsed
         }
-        stderr = -> arg { puts arg }
         myexit = -> code {
           @candidates = @candidates.compact.sort
           cb.call(@candidates)
@@ -49,7 +57,8 @@ module Racer
     end
 
     def parse_single(line)
-      if matches = line.match(/^MATCH (\w*)\,/)
+      matches = line.match(/^MATCH (\w*)\,/)
+      if matches && matches.respond_to?(:captures)
         matches.captures.first
       end
     end

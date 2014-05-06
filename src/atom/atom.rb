@@ -1,16 +1,21 @@
 require 'native'
 require "./buf_process"
 require "./file"
+require "./config"
 
 module Atom
   class Atom
     include Native
-    native_accessor :clipboard, :config, :context_menu,
+    native_accessor :clipboard, :context_menu,
     :deserializers, :keymap, :menu, :packages, :project,
     :syntax, :themes, :workspace, :github_auth_token
 
     def initialize
       super(`atom`)
+    end
+
+    def config
+      @config || Atom::Config.new()
     end
 
     # Visually and audibly trigger a beep.
