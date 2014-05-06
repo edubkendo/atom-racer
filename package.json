@@ -3,7 +3,7 @@
   "main": "./lib/racer",
   "version": "0.0.0",
   "description": "Intelligent Rust code completion.",
-  "repository": "https://github.com/edubkendo/racer",
+  "repository": "git://github.com/edubkendo/atom-racer",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"
