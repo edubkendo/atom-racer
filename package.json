@@ -1,7 +1,7 @@
 {
   "name": "racer",
   "main": "./lib/racer",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Intelligent Rust code completion.",
   "repository": "https://github.com/edubkendo/racer",
   "license": "MIT",
