@@ -13,7 +13,7 @@ module Racer
     def process_env_vars
       @rust_src = @rust_src || @settings.racer.rustSrcPath
       @project_path = @project_path || @atom.project.getPath()
-      [@rust_src, @project_path]
+      "#{@rust_src}:#{@project_path}"
     end
 
     def completions(editor, row, col, cb)
@@ -23,8 +23,8 @@ module Racer
         @tempfile = tempfile
         @text = @editor.getText
         @tempfile.write(@text)
-        rust_src, project_path = process_env_vars()
-        `process.env.RUST_SRC_PATH = "/Users/ericwest/installs/rust/src/:/Users/ericwest/code/rust"`
+        RUST_SRC_PATH = process_env_vars()
+        `process.env.RUST_SRC_PATH = #{RUST_SRC_PATH}`
 
         racer_bin = @settings.racer.racerBinPath
         command = "#{racer_bin}"
