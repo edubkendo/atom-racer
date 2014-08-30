@@ -13,9 +13,8 @@
     "autocomplete-plus": "git://github.com/saschagehlich/autocomplete-plus.git#feature/api",
     "fs-plus": "2.x",
     "async": ">=0.9.0",
-    "pathwatcher": "~1.2.0",
+    "pathwatcher": "~2.0.X",
     "fuzzaldrin": "~1.0.0",
     "tmp": "*"
   }
 }
-
