@@ -15,9 +15,8 @@ _ = require "underscore-plus"
 
 module.exports =
   configDefaults:
-    rustSrcPath: "/usr/local/src/rust/src"
+    rustSrcPath: "/usr/local/src/rust/src",
     racerBinPath: "/usr/local/bin/racer"
-
   editorSubscription: null
   providers: []
   autocomplete: null
@@ -38,14 +37,13 @@ module.exports =
   registerProviders: ->
     @editorSubscription = atom.workspaceView.eachEditorView (editorView) =>
       if editorView.attached and not editorView.mini
-        editorView.editor.on "grammar-changed", =>
-          if editorView.editor.getGrammar().name.match(/Rust/)
-            provider = new RacerProvider editorView
+        if editorView.editor.getGrammar().name.match(/Rust/)
+          provider = new RacerProvider editorView
 
-            @autocomplete.registerProviderForEditorView provider, editorView
+          @autocomplete.registerProviderForEditorView provider, editorView
 
-            @providers.push provider
-            @racer.$add_provider(provider)
+          @providers.push provider
+          @racer.$add_provider(provider)
 
   ###
    * Cleans everything up, unregisters all SnippetProvider instances

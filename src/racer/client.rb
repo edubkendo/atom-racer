@@ -7,11 +7,11 @@ module Racer
 
     def initialize(atom)
       @atom = atom
-      @settings = @atom.config.settings
+      @settings = @atom.config
     end
 
     def process_env_vars
-      @rust_src = @rust_src || @settings.racer.rustSrcPath
+      @rust_src = @rust_src || `atom.config.get("atom-racer.rustSrcPath")`
       @project_path = @project_path || @atom.project.getPath()
       "#{@rust_src}:#{@project_path}"
     end
@@ -26,7 +26,7 @@ module Racer
         RUST_SRC_PATH = process_env_vars()
         `process.env.RUST_SRC_PATH = #{RUST_SRC_PATH}`
 
-        racer_bin = @settings.racer.racerBinPath
+        racer_bin = Native(`atom.config.get("atom-racer.racerBinPath")`)
         command = "#{racer_bin}"
         args = ["complete", row + 1, col, @filepath]
         stdout = -> output {
