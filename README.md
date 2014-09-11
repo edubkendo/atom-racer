@@ -1,3 +1,6 @@
+## I am not currently using Rust at all and am thus not in a position to maintain this repo anymore.
+## If someone else is interested please create an issue.
+
 # Racer
 
 Providing intelligent code completion for Rust, via [Racer](https://github.com/phildawes/racer) and using [Autocomplete+](https://github.com/saschagehlich/autocomplete-plus).
