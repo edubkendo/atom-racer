@@ -1,4 +1,5 @@
 # Rakefile
+require 'tilt'
 require 'opal'
 
 desc "Build the Opal runtime and corelib"
