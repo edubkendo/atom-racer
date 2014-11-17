@@ -39,9 +39,9 @@ class RacerClient
     return
 
   process_env_vars: ->
-    @racer_bin = @racer_bin || atom.config.get("racer.racerBinPath")
-    @rust_src = @rust_src || atom.config.get("racer.rustSrcPath")
-    @project_path = @project_path || atom.project.getPath()
+    @racer_bin = @racer_bin or atom.config.get("racer.racerBinPath")
+    @rust_src = @rust_src or atom.config.get("racer.rustSrcPath")
+    @project_path = @project_path or atom.project.getPath()
     "#{@rust_src}:#{@project_path}"
 
   parse_single: (line) ->
