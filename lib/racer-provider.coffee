@@ -43,11 +43,11 @@ class RacerProvider extends Provider
   findSuggestionsForPrefix: (prefix) ->
     if @completions?.length
       # Filter the candidate words using fuzzaldrin
-      words = fuzzaldrin.filter @completions, prefix
+      words = fuzzaldrin.filter @completions, prefix, key: 'word'
 
       # Builds suggestions for the filtered candidate words
-      suggestions = for word in words when word isnt prefix
-        new Suggestion this, word: word, prefix: prefix, label: "@#{word}"
+      suggestions = for word in words when word.word? isnt prefix
+        new Suggestion this, word: word.word, prefix: prefix, label: "#{word.type} <em>(#{word.file})</em>", renderLabelAsHtml: true
 
       return suggestions
 

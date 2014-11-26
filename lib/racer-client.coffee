@@ -2,6 +2,7 @@
 _ = require "underscore-plus"
 pathwatcher = require "pathwatcher"
 tmp = require "tmp"
+path = require "path"
 
 module.exports =
 class RacerClient
@@ -29,7 +30,7 @@ class RacerClient
           @candidates.push(parsed) if parsed
           return
         exit: (code) =>
-          @candidates = (_.uniq(_.compact(_.flatten(@candidates)))).sort()
+          @candidates = _.uniq(_.compact(_.flatten(@candidates)), (e) => e.word+e.file+e.type )
           cb @candidates
           return
 
@@ -46,16 +47,19 @@ class RacerClient
 
   parse_single: (line) ->
     matches = []
-    rcrgex = /MATCH (\w*)\,.*\n/mg
+    rcrgex = /MATCH (\w*)\,\d*\,\d*\,([^\,]*)\,(\w*)\,.*\n/mg
     while match = rcrgex.exec(line)
-      matches.push(match[1]) if match?.length > 1
+      if match?.length > 2
+        candidate = {word:match[1], file:"this", type:match[3]}
+        candidate.file = path.basename(match[2]) if path.extname(match[2]) != ".racertmp"
+        matches.push(candidate)
     return matches
 
   create_temp: (cb) ->
-    tmp.file { postfix: ".racertmp" }, (err, path) =>
+    tmp.file { postfix: ".racertmp" }, (err, tmppath) =>
       if err
         console.error(err)
         cb null
-      cb path, new pathwatcher.File(path)
+      cb tmppath, new pathwatcher.File(tmppath)
       return
     return
