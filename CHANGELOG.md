@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.6.0 (2014-11-13)
+## v0.6.0 (2014-11-27)
 Full refactor
 
 * Use Coffeescript instead of Ruby (+ Opal javascript conversion)
@@ -8,6 +8,7 @@ Full refactor
 * Add a Travis CI file to build and test the module
 * Update module dependencies
 * Enrich the package.json
+* Display the type and file along with the proposed completion (ex: "HashMap Struct (map.rs)")
 
 ## v0.5.0 (2014-11-10)
 Conformance to atom
