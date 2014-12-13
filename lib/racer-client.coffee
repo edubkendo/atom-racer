@@ -1,6 +1,6 @@
 {BufferedProcess} = require 'atom'
 _ = require "underscore-plus"
-pathwatcher = require "pathwatcher"
+fs = require "fs"
 tmp = require "tmp"
 path = require "path"
 
@@ -14,13 +14,13 @@ class RacerClient
   check_completion: (editor, row, col, cb) ->
     process.env.RUST_SRC_PATH = @process_env_vars()
 
-    @create_temp (tempfilepath, tempfile) =>
+    @create_temp (tempfilepath) =>
       if not tempfilepath
         cb []
         return
 
       text = editor.getText()
-      tempfile.write(text)
+      fs.writeFileSync tempfilepath, text
 
       options =
         command: @racer_bin
@@ -60,6 +60,6 @@ class RacerClient
       if err
         console.error(err)
         cb null
-      cb tmppath, new pathwatcher.File(tmppath)
+      cb tmppath
       return
     return
