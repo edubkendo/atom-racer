@@ -28,7 +28,6 @@
   "dependencies": {
     "underscore-plus": "~1.6.1",
     "autocomplete-plus": "git://github.com/saschagehlich/autocomplete-plus.git",
-    "fuzzaldrin": "~2.1.0",
     "tmp": "*"
   }
 }

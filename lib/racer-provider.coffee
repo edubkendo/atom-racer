@@ -1,5 +1,4 @@
 {Provider, Suggestion} = require "autocomplete-plus"
-fuzzaldrin = require "fuzzaldrin"
 RacerClient = require "./racer-client"
 
 ###
