@@ -43,7 +43,8 @@ class RacerClient
     @racer_bin = @racer_bin or atom.config.get("racer.racerBinPath")
     @rust_src = @rust_src or atom.config.get("racer.rustSrcPath")
     @project_path = @project_path or atom.project.getPath()
-    "#{@rust_src}:#{@project_path}"
+    separator = ';' ? process.platform == 'win32' : ':'
+    "#{@rust_src}#{separator}#{@project_path}"
 
   parse_single: (line) ->
     matches = []
