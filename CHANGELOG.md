@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.8.0 (2014-12-27)
+Make it full synchronous to conform to the current "autocomplete-plus" API state.
+This is temporary, waiting for an asynchronous API to emerge in the future.
+
+* Call the "racer" process synchronously (along with temporary file creation)
+* Remove unused or not required modules dependencies
+* Update to conform to the autocomplete-plus Providers best practices
+
+## v0.7.1 (2014-12-20)
+Windows fix
+
+* Use semicolon environment variable separator on win32
+
+## v0.7.0 (2014-12-15)
+Cleanup
+
+* Remove filtering package from deps
+* Don't filter suggestions
+* Remove pathwatcher dep
+
 ## v0.6.0 (2014-11-27)
 Full refactor
 

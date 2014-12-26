@@ -1,49 +1,46 @@
-{BufferedProcess} = require 'atom'
-_ = require "underscore-plus"
-fs = require "fs"
-tmp = require "tmp"
-path = require "path"
+{spawnSync} = require 'child_process'
+_ = require 'underscore-plus'
+fs = require 'fs'
+temp = require('temp').track()
+path = require 'path'
 
 module.exports =
 class RacerClient
   racer_bin: null
   rust_src: null
   project_path: null
-  candidates: null
 
-  check_completion: (editor, row, col, cb) ->
+  check_completion: (editor, row, col) ->
+    tempFilePath = temp.openSync({ suffix: ".racertmp" }).path
+    return unless tempFilePath
+
+    text = editor.getText()
+    fs.writeFileSync tempFilePath, text
+
     process.env.RUST_SRC_PATH = @process_env_vars()
 
-    @create_temp (tempfilepath) =>
-      if not tempfilepath
-        cb []
-        return
-
-      text = editor.getText()
-      fs.writeFileSync tempfilepath, text
-
-      options =
-        command: @racer_bin
-        args: ["complete", row + 1, col, tempfilepath]
-        stdout: (output) =>
-          parsed = @parse_single(output)
-          @candidates.push(parsed) if parsed
-          return
-        exit: (code) =>
-          @candidates = _.uniq(_.compact(_.flatten(@candidates)), (e) => e.word+e.file+e.type )
-          cb @candidates
-          return
-
-      @candidates = []
-      process = new BufferedProcess(options)
+    command = @racer_bin
+    args = ["complete", row + 1, col, tempFilePath]
+    options =
+      encoding: 'utf8'
+    result = spawnSync(command, args, options)
+    if result.error?
+      console.error 'Error: ' + result.error
       return
-    return
+    if not result?.stdout? then return
+
+    candidates = []
+    parsed = @parse_single(result.stdout)
+    candidates.push(parsed) if parsed
+
+    candidates = _.uniq(_.compact(_.flatten(candidates)), (e) => e.word+e.file+e.type )
+    return candidates
 
   process_env_vars: ->
     @racer_bin = @racer_bin or atom.config.get("racer.racerBinPath")
     @rust_src = @rust_src or atom.config.get("racer.rustSrcPath")
     @project_path = @project_path or atom.project.getPath()
-    separator = ';' ? process.platform == 'win32' : ':'
+    separator = if process.platform is 'win32' then ';' else ':'
     "#{@rust_src}#{separator}#{@project_path}"
 
   parse_single: (line) ->
@@ -55,12 +52,3 @@ class RacerClient
         candidate.file = path.basename(match[2]) if path.extname(match[2]) != ".racertmp"
         matches.push(candidate)
     return matches
-
-  create_temp: (cb) ->
-    tmp.file { postfix: ".racertmp" }, (err, tmppath) =>
-      if err
-        console.error(err)
-        cb null
-      cb tmppath
-      return
-    return
