@@ -2,7 +2,7 @@ RacerClient = require './racer-client'
 _ = require 'underscore-plus'
 
 module.exports =
-ProviderClass: (Provider, Suggestion)  ->
+ProviderClass: (Provider, Suggestion) ->
 
   class RacerProvider extends Provider
     wordRegex: /(\b\w*[a-zA-Z1-9:.]\w*\b|[a-zA-Z1-9:.])/g
@@ -13,6 +13,9 @@ ProviderClass: (Provider, Suggestion)  ->
     initialize: ->
       @racerClient = new RacerClient
 
+    ###
+     * entrypoint to provide autocomplete - plus suggessions
+    ###
     buildSuggestions: ->
       selection = @editor.getLastSelection()
       prefix = @prefixOfSelection selection
@@ -38,7 +41,7 @@ ProviderClass: (Provider, Suggestion)  ->
 
         # Builds suggestions for the candidate words
         suggestions = for word in words when word.word? isnt prefix
-          new Suggestion this, word: word.word, prefix: prefix, label: "#{word.type} <em>(#{word.file})</em>", renderLabelAsHtml: true
+          new Suggestion(this, word: word.word, prefix: prefix, label: "#{word.type} <em>(#{word.file})</em>", renderLabelAsHtml: true)
 
         return suggestions
 

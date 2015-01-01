@@ -33,7 +33,7 @@ class RacerClient
     parsed = @parse_single(result.stdout)
     candidates.push(parsed) if parsed
 
-    candidates = _.uniq(_.compact(_.flatten(candidates)), (e) => e.word+e.file+e.type )
+    candidates = _.uniq(_.compact(_.flatten(candidates)), (e) => e.word + e.file + e.type )
     return candidates
 
   process_env_vars: ->
@@ -48,7 +48,7 @@ class RacerClient
     rcrgex = /MATCH (\w*)\,\d*\,\d*\,([^\,]*)\,(\w*)\,.*\n/mg
     while match = rcrgex.exec(line)
       if match?.length > 2
-        candidate = {word:match[1], file:"this", type:match[3]}
+        candidate = {word: match[1], file: "this", type: match[3]}
         candidate.file = path.basename(match[2]) if path.extname(match[2]) != ".racertmp"
         matches.push(candidate)
     return matches
