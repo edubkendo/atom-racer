@@ -1,4 +1,4 @@
-{spawnSync} = require 'child_process'
+{BufferedProcess} = require 'atom'
 _ = require 'underscore-plus'
 fs = require 'fs'
 temp = require('temp').track()
@@ -9,32 +9,38 @@ class RacerClient
   racer_bin: null
   rust_src: null
   project_path: null
+  candidates: null
 
-  check_completion: (editor, row, col) ->
-    tempFilePath = temp.openSync({ suffix: ".racertmp" }).path
-    return unless tempFilePath
-
-    text = editor.getText()
-    fs.writeFileSync tempFilePath, text
-
+  check_completion: (editor, row, col, cb) ->
     process.env.RUST_SRC_PATH = @process_env_vars()
 
-    command = @racer_bin
-    args = ["complete", row + 1, col, tempFilePath]
-    options =
-      encoding: 'utf8'
-    result = spawnSync(command, args, options)
-    if result.error?
-      console.error 'Error: ' + result.error
+    temp.open { suffix: ".racertmp" }, (err, info) =>
+      if err
+        console.error(err)
+        cb null
+
+      tempFilePath = info.path
+      cb null unless tempFilePath
+
+      text = editor.getText()
+      fs.writeFileSync tempFilePath, text
+
+      options =
+        command: @racer_bin
+        args: ["complete", row + 1, col, tempFilePath]
+        stdout: (output) =>
+          parsed = @parse_single(output)
+          @candidates.push(parsed) if parsed
+          return
+        exit: (code) =>
+          @candidates = _.uniq(_.compact(_.flatten(@candidates)), (e) => e.word + e.file + e.type )
+          cb @candidates
+          return
+
+      @candidates = []
+      process = new BufferedProcess(options)
       return
-    if not result?.stdout? then return
-
-    candidates = []
-    parsed = @parse_single(result.stdout)
-    candidates.push(parsed) if parsed
-
-    candidates = _.uniq(_.compact(_.flatten(candidates)), (e) => e.word+e.file+e.type )
-    return candidates
+    return
 
   process_env_vars: ->
     @racer_bin = @racer_bin or atom.config.get("racer.racerBinPath")
@@ -48,7 +54,7 @@ class RacerClient
     rcrgex = /MATCH (\w*)\,\d*\,\d*\,([^\,]*)\,(\w*)\,.*\n/mg
     while match = rcrgex.exec(line)
       if match?.length > 2
-        candidate = {word:match[1], file:"this", type:match[3]}
+        candidate = {word: match[1], file: "this", type: match[3]}
         candidate.file = path.basename(match[2]) if path.extname(match[2]) != ".racertmp"
         matches.push(candidate)
     return matches
