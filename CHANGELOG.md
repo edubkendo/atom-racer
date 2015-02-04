@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.9.1 (2015-02-04)
+Switch to registering a provider service declaratively through package.json
+
 ## v0.9.0 (2015-02-01)
 Use the new Provider API from "autocomplete-plus"
 
