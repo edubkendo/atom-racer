@@ -29,5 +29,13 @@
   "dependencies": {
     "underscore-plus": "~1.6.1",
     "temp": "~0.8.1"
+  },
+  "providedServices": {
+    "autocomplete.provider": {
+      "description": "Intelligent Rust code completion",
+      "versions": {
+        "1.0.0": "provideAutocompletion"
+      }
+    }
   }
 }

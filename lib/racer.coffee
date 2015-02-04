@@ -12,17 +12,16 @@ module.exports =
       type: 'string'
       default: '/usr/local/bin/racer'
   # members
-  registration: null
   racerProvider: null
 
   activate: (state) ->
     @racerProvider = new RacerProvider()
-    @registration = atom.services.provide('autocomplete.provider', '1.0.0', {provider: @racerProvider})
     return
 
+  provideAutocompletion: ->
+    return {provider: @racerProvider}
+
   deactivate: ->
-    @registration?.dispose()
-    @registration = null
     @racerProvider?.dispose()
     @racerProvider = null
     return
