@@ -18,28 +18,28 @@ class RacerClient
       if err
         console.error(err)
         cb null
+      else
+        tempFilePath = info.path
+        cb null unless tempFilePath
 
-      tempFilePath = info.path
-      cb null unless tempFilePath
+        text = editor.getText()
+        fs.writeFileSync tempFilePath, text
+        fs.close(info.fd);
+        options =
+          command: @racer_bin
+          args: ["complete", row + 1, col, tempFilePath]
+          stdout: (output) =>
+            parsed = @parse_single(output)
+            @candidates.push(parsed) if parsed
+            return
+          exit: (code) =>
+            @candidates = _.uniq(_.compact(_.flatten(@candidates)), (e) => e.word + e.file + e.type )
+            cb @candidates
+            return
 
-      text = editor.getText()
-      fs.writeFileSync tempFilePath, text
-
-      options =
-        command: @racer_bin
-        args: ["complete", row + 1, col, tempFilePath]
-        stdout: (output) =>
-          parsed = @parse_single(output)
-          @candidates.push(parsed) if parsed
-          return
-        exit: (code) =>
-          @candidates = _.uniq(_.compact(_.flatten(@candidates)), (e) => e.word + e.file + e.type )
-          cb @candidates
-          return
-
-      @candidates = []
-      process = new BufferedProcess(options)
-      return
+        @candidates = []
+        process = new BufferedProcess(options)
+        return
     return
 
   process_env_vars: ->
