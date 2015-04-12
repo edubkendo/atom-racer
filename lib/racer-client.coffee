@@ -45,7 +45,7 @@ class RacerClient
   process_env_vars: ->
     @racer_bin = @racer_bin or atom.config.get("racer.racerBinPath")
     @rust_src = @rust_src or atom.config.get("racer.rustSrcPath")
-    @project_path = @project_path or atom.project.getPath()
+    @project_path = @project_path or atom.project.getPaths()[0]
     separator = if process.platform is 'win32' then ';' else ':'
     "#{@rust_src}#{separator}#{@project_path}"
 
