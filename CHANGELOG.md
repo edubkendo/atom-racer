@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.10.1 (2015-04-13)
+Fixes Atom API deprecated use of project.getPath()
+
+## v0.10.0 (2015-04-11)
+Better handling of temp files
+
+* Close temp files
+* Dont run racer on temp file creation error
+
 ## v0.9.1 (2015-02-04)
 Switch to registering a provider service declaratively through package.json
 
