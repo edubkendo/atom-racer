@@ -27,14 +27,14 @@
     "atom": ">0.50.0"
   },
   "dependencies": {
-    "underscore-plus": "~1.6.1",
+    "underscore-plus": "~1.6.6",
     "temp": "~0.8.1"
   },
   "providedServices": {
     "autocomplete.provider": {
       "description": "Intelligent Rust code completion",
       "versions": {
-        "1.0.0": "provideAutocompletion"
+        "2.0.0": "provideAutocompletion"
       }
     }
   }
