@@ -3,25 +3,28 @@ RacerClient = require './racer-client'
 
 module.exports =
 class RacerProvider
-  id: 'racer-racerprovider'
   selector: '.source.rust'
+  inclusionPriority: 1
+  excludeLowerPriority: false
   racerClient: null
 
   constructor: ->
+    @disableForSelector = atom.config.get('racer.autocompleteBlacklist')
     @racerClient = new RacerClient
 
-  requestHandler: (options) ->
+  getSuggestions: ({editor, bufferPosition, prefix}) ->
     return new Promise (resolve) =>
-      return resolve() unless options?
-      return resolve() unless options.prefix?.length
-      return resolve() unless options.cursor?
-      return resolve() unless options.editor?
-      return resolve() unless options.buffer?
+      return resolve() unless prefix?.length
+      return resolve() unless editor?
+      buffer = editor.getBuffer()
+      return resolve() unless buffer?
+      return resolve() unless bufferPosition?
+      return resolve() unless prefix?
 
-      row = options.cursor.getBufferRow()
-      col = options.cursor.getBufferColumn()
-      completions = @racerClient.check_completion(options.editor, row, col, (completions) =>
-        suggestions = @findSuggestionsForPrefix(options.prefix, completions)
+      row = bufferPosition.row
+      col = bufferPosition.column
+      completions = @racerClient.check_completion(editor, row, col, (completions) =>
+        suggestions = @findSuggestionsForPrefix(prefix, completions)
         return resolve() unless suggestions?.length
         return resolve(suggestions)
       )
@@ -38,14 +41,21 @@ class RacerProvider
         # Eliminate prefixes that are counted as part of words and break the completion.
         prefix = '' if prefix.slice(-1).match(/(\)|\.|:|;)/g)
         suggestion =
-          word: word.word
-          prefix: prefix
-          label: "#{word.type} <em>(#{word.file})</em>"
-          renderLabelAsHtml: true
+          text: word.word
+          replacementPrefix: prefix
+          rightLabelHTML: "<em>(#{word.file})</em>"
+          leftLabel: word.type
+          type: @mapType(word.type)
         suggestions.push(suggestion)
 
       return suggestions
 
     return []
+
+  mapType: (type) ->
+    switch type
+      when 'Function' then 'function'
+      when 'Module' then 'module'
+      else type
 
   dispose: ->

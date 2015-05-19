@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.11.0 (2015-05-19)
+Migrate to autocomplete-plus v2.0 providers API
+
+* Use the 2.0.0 Provider API from "autocomplete-plus"
+* Add new setting to blacklist user-specified selectors from triggering completion
+* Benefit from the new GUI possibilities of v2 provider's API to give clues about the types of the proposed completions
+* Update dependencies
+
 ## v0.10.1 (2015-04-13)
 Fixes Atom API deprecated use of project.getPath()
 
