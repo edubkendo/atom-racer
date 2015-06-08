@@ -17,7 +17,12 @@ class RacerClient
       cb null
       return
 
-    temp.open { suffix: ".racertmp" }, (err, info) =>
+    tempOptions =
+      prefix: "._racertmp"
+    if @project_path
+      tempOptions.dir = @project_path
+
+    temp.open tempOptions, (err, info) =>
       if err
         console.error(err)
         cb null
@@ -38,6 +43,7 @@ class RacerClient
           exit: (code) =>
             @candidates = _.uniq(_.compact(_.flatten(@candidates)), (e) => e.word + e.file + e.type )
             cb @candidates
+            temp.cleanup()
             return
 
         @candidates = []
