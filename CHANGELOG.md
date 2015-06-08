@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.12.0 (2015-06-09)
+Avoid misconfiguration and try to help racer to find a Cargo.toml by writing temp files in the project directory
+
+* Rewrite the README file so that it warns for misconfiguration and is more structured.
+* Do not launch completion if the configuration is obviously wrong.
+* Check that "racer.racerBinPath" points to a valid file.
+* Check that "racer.rustSrcPath" points to a valid directory.
+* Rescan the current project path for each completion because it can change during the editor's life.
+* Write the temporary file directly in the project path to help racer locate a related Cargo.toml.
+* Clean temp files immediately after racer returns.
+
 ## v0.11.0 (2015-05-19)
 Migrate to autocomplete-plus v2.0 providers API
 

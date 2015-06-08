@@ -1,22 +1,30 @@
-# Racer
+# [Racer](https://atom.io/packages/racer)
 
-Providing intelligent code completion for Rust, via [Racer](https://github.com/phildawes/racer) and using [Autocomplete+](https://github.com/saschagehlich/autocomplete-plus).
+> Providing intelligent code completion for Rust via [Racer](https://github.com/phildawes/racer).
 
-### Installation
+![A screenshot of racer at work](https://cloud.githubusercontent.com/assets/1395968/2886329/0396e8a4-d4e2-11e3-9813-f6697a01d959.gif)
 
-First, ensure you have both [Racer](https://github.com/phildawes/racer) and [Autocomplete+](https://github.com/saschagehlich/autocomplete-plus) properly installed. Then install this package via Atom's package manager. You will also need a copy of the Rust src code.
+## Installation
 
-### Usage
+1. Ensure you have [Racer](https://github.com/phildawes/racer) properly installed.
+2. Ensure you have a copy of the [rustc source code](http://www.rust-lang.org/install.html) extracted on your disk.
+3. Install this package via Atom's package manager:
+ * go to `Preferences > Packages`, search for `racer`, and install it
+ * **OR** use the command line `apm install racer`).
 
-Go to Atom/Preferences/Racer and set the correct paths to both your Racer installation, as well as your local copy of the Rust source code. The path to Racer should point to the Racer binary, while the Rust source will point to the directory.
+## Configuration
 
-- Racer Bin Path
-  `/Users/me/software/racer/bin/racer`
+go to `Preferences > Packages`, search for `racer`, and click `Settings`
 
-- Rust Src Path
-  `/Users/me/code/rust/src/`
+* **WARNINGS:** The path to Racer has to point to the *Racer binary executable* (this is **NOT a directory** we request here).
+* The Rustc source has to point to the *base directory of the source code*.
 
+| Display Name                           | Description                                                                                                       | Required | Name                          |
+|:---------------------------------------|:------------------------------------------------------------------------------------------------------------------|:---------|:------------------------------|
+| Path to the Racer executable           | Full path (including executable) of Racer's binary (e.g. `/Users/me/racer/bin/racer` or `c:\racer\bin\racer.exe`) | `YES`    | `racer.racerBinPath`          |
+| Path to the Rust source code directory | Should point to the rustc source directory (e.g. `/Users/me/code/rust/src/`)                                      | `YES`    | `racer.rustSrcPath`           |
+| Autocomplete Scope Blacklist           | Scopes for which no suggestions will be made (e.g. `.source.go .comment`)                                         | `NO`     | `racer.autocompleteBlacklist` |
 
-Then usage is as easy as typing.
+## Usage
 
-![A screenshot of your spankin' package](https://cloud.githubusercontent.com/assets/1395968/2886329/0396e8a4-d4e2-11e3-9813-f6697a01d959.gif)
+Just type some code in a `.rs` file, and racer will automatically show you some suggestions (using the autocomplete+ package provided by Atom).
