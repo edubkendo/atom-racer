@@ -12,7 +12,10 @@ class RacerClient
   candidates: null
 
   check_completion: (editor, row, col, cb) ->
-    process.env.RUST_SRC_PATH = @process_env_vars()
+    if !@process_env_vars()
+      console.error("Your racer package is not properly configured.")
+      cb null
+      return
 
     temp.open { suffix: ".racertmp" }, (err, info) =>
       if err
@@ -43,11 +46,36 @@ class RacerClient
     return
 
   process_env_vars: ->
-    @racer_bin = @racer_bin or atom.config.get("racer.racerBinPath")
-    @rust_src = @rust_src or atom.config.get("racer.rustSrcPath")
-    @project_path = @project_path or atom.project.getPaths()[0]
-    separator = if process.platform is 'win32' then ';' else ':'
-    "#{@rust_src}#{separator}#{@project_path}"
+    config_is_valid = true
+
+    if !@racer_bin?
+      conf_bin = atom.config.get("racer.racerBinPath")
+      if conf_bin
+        try
+          stats = fs.lstatSync(conf_bin);
+          if stats?.isFile()
+            @racer_bin = conf_bin
+    if !@racer_bin?
+      config_is_valid = false
+      console.error("racer.racerBinPath should point to the Racer binary executable")
+
+    if !@rust_src?
+      conf_src = atom.config.get("racer.rustSrcPath")
+      if conf_src
+        try
+          stats = fs.lstatSync(conf_src);
+          if stats?.isDirectory()
+            @rust_src = conf_src
+    if !@rust_src?
+      config_is_valid = false
+      console.error("racer.rustSrcPath should point to the Rustc sourcecode directory")
+
+    if config_is_valid
+      @project_path = atom.project.getPaths()[0]
+      separator = if process.platform is 'win32' then ';' else ':'
+      process.env.RUST_SRC_PATH = "#{@rust_src}#{separator}#{@project_path}"
+
+    return config_is_valid
 
   parse_single: (line) ->
     matches = []
