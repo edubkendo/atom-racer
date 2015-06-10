@@ -17,10 +17,14 @@ class RacerClient
       cb null
       return
 
+    editor_file_path = editor.getPath().substring(0, )
+    editor_folder_path = editor_file_path.substring(0, editor_file_path.lastIndexOf("/"))
+
     tempOptions =
       prefix: "._racertmp"
     if @project_path
-      tempOptions.dir = @project_path
+      tempOptions.dir = editor_folder_path
+
 
     temp.open tempOptions, (err, info) =>
       if err
