@@ -17,13 +17,14 @@ class RacerClient
       cb null
       return
 
-    editor_file_path = editor.getPath().substring(0, )
-    editor_folder_path = editor_file_path.substring(0, editor_file_path.lastIndexOf("/"))
+    temp_folder_path = path.dirname(editor.getPath())
+    # temp_folder_path will be '.' for unsaved files
+    if temp_folder_path == "."
+      temp_folder_path = @project_path
 
     tempOptions =
       prefix: "._racertmp"
-    if @project_path
-      tempOptions.dir = editor_folder_path
+      dir: temp_folder_path
 
 
     temp.open tempOptions, (err, info) =>
@@ -81,9 +82,7 @@ class RacerClient
       console.error("racer.rustSrcPath should point to the Rustc sourcecode directory")
 
     if config_is_valid
-      @project_path = atom.project.getPaths()[0]
-      separator = if process.platform is 'win32' then ';' else ':'
-      process.env.RUST_SRC_PATH = "#{@rust_src}#{separator}#{@project_path}"
+      process.env.RUST_SRC_PATH = @rust_src
 
     return config_is_valid
 
