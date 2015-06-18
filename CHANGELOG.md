@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.14.1 (2015-06-19)
+Update the README to have a FAQ that serves as our manual.
+
+## v0.14.0 (2015-06-15)
+Put the temporary files directly into the project directory to help racer locate and use cargo and complete dependencies.
+
+* move temp file to current file's directory.
+* remove project path from RUST_SRC_PATH since it's automatically found by racer now the temp file is in the project directory.
+
+## v0.13.0 (2015-06-09)
+Skipped
+
 ## v0.12.0 (2015-06-09)
 Avoid misconfiguration and try to help racer to find a Cargo.toml by writing temp files in the project directory
 
