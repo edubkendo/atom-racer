@@ -16,9 +16,6 @@
 
 go to `Preferences > Packages`, search for `racer`, and click `Settings`
 
-* **WARNINGS:** The path to Racer has to point to the *Racer binary executable* (this is **NOT a directory** we request here).
-* The Rustc source has to point to the *base directory of the source code*.
-
 | Display Name                           | Description                                                                                                       | Required | Name                          |
 |:---------------------------------------|:------------------------------------------------------------------------------------------------------------------|:---------|:------------------------------|
 | Path to the Racer executable           | Full path (including executable) of Racer's binary (e.g. `/Users/me/racer/bin/racer` or `c:\racer\bin\racer.exe`) | `YES`    | `racer.racerBinPath`          |
@@ -28,3 +25,30 @@ go to `Preferences > Packages`, search for `racer`, and click `Settings`
 ## Usage
 
 Just type some code in a `.rs` file, and racer will automatically show you some suggestions (using the autocomplete+ package provided by Atom).
+
+## FAQ:
+### Racer doesn't work, or I see plugin errors when I type:
+Your configuration is probably wrong:
+* The path to Racer has to point to the *Racer binary executable* (this is **NOT a directory** we request here).
+* The Rustc source has to point to the *base directory of the source code*.
+
+### My project tree (tree-view) flickers:
+We use temporary files to communicate with racer and need to place them along with your source files.
+
+We shaped them as `._racertmpXXXXX` because the `._*` files are ignored by default by Atom.
+
+Change your configuration so that the `tree-view` package follows Atom ignore rules!
+* Open `Settings > Packages`
+* Search the core package called `tree-view`, click `Settings`
+* Check the box called `Hide Ignored Names`
+
+Note: by the way, you can control what is ignored in the main Atom settings top panel.
+* Open `Settings > Settings` (the first tab)
+* Search the "core settings" section for the `Ignored Names` field
+* check that it's either empty (default), or contains `._*`, or add yourself a `._racertmp*` entry if you already changed the settings.
+
+### Why do you constantly put (and remove) temporary files in my project:
+We use temporary files to communicate with racer and need to place them along with your source files so that racer:
+* locates your project,
+* provides completion for your whole projects code,
+* locates your cargo file if it exists and use it to provide completion for your dependencies.
