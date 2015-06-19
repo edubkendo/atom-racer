@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.14.2 (2015-06-19)
+Update the README to mention our dependency on the language-rust package.
+
 ## v0.14.1 (2015-06-19)
 Update the README to have a FAQ that serves as our manual.
 
