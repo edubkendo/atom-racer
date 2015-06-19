@@ -6,9 +6,10 @@
 
 ## Installation
 
-1. Ensure you have [Racer](https://github.com/phildawes/racer) properly installed.
-2. Ensure you have a copy of the [rustc source code](http://www.rust-lang.org/install.html) extracted on your disk.
-3. Install this package via Atom's package manager:
+1. Ensure you have the Atom package [language-rust](https://atom.io/packages/language-rust) installed and active.
+2. Ensure you have [Racer](https://github.com/phildawes/racer) properly installed.
+3. Ensure you have a copy of the [rustc source code](http://www.rust-lang.org/install.html) extracted on your disk.
+4. Install this package via Atom's package manager:
  * go to `Preferences > Packages`, search for `racer`, and install it
  * **OR** use the command line `apm install racer`).
 
@@ -31,6 +32,7 @@ Just type some code in a `.rs` file, and racer will automatically show you some 
 Your configuration is probably wrong:
 * The path to Racer has to point to the *Racer binary executable* (this is **NOT a directory** we request here).
 * The Rustc source has to point to the *base directory of the source code*.
+* The Atom package *language-rust* is installed and active.
 
 ### My project tree (tree-view) flickers:
 We use temporary files to communicate with racer and need to place them along with your source files.
