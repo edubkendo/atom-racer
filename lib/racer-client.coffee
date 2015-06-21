@@ -11,50 +11,56 @@ class RacerClient
   project_path: null
   candidates: null
 
-  check_completion: (editor, row, col, cb) ->
-    if !@process_env_vars()
-      console.error("Your racer package is not properly configured.")
-      cb null
+  check_generator = (racer_action) ->
+    (editor, row, col, cb) ->
+      if !@process_env_vars()
+        console.error("Your racer package is not properly configured.")
+        cb null
+        return
+
+      temp_folder_path = path.dirname(editor.getPath())
+      original_file_name = path.basename(editor.getPath())
+      # temp_folder_path will be '.' for unsaved files
+      if temp_folder_path == "."
+        temp_folder_path = @project_path
+
+      tempOptions =
+        prefix: original_file_name + ".racertmp_"
+        dir: temp_folder_path
+
+
+      temp.open tempOptions, (err, info) =>
+        if err
+          console.error(err)
+          cb null
+        else
+          tempFilePath = info.path
+          cb null unless tempFilePath
+
+          text = editor.getText()
+          fs.writeFileSync tempFilePath, text
+          fs.close(info.fd);
+          options =
+            command: @racer_bin
+            args: [racer_action, row + 1, col, tempFilePath]
+            stdout: (output) =>
+              parsed = @parse_single(output)
+              @candidates.push(parsed) if parsed
+              return
+            exit: (code) =>
+              @candidates = _.uniq(_.compact(_.flatten(@candidates)), (e) => e.word + e.file + e.type )
+              cb @candidates
+              temp.cleanup()
+              return
+
+          @candidates = []
+          process = new BufferedProcess(options)
+          return
       return
 
-    temp_folder_path = path.dirname(editor.getPath())
-    # temp_folder_path will be '.' for unsaved files
-    if temp_folder_path == "."
-      temp_folder_path = @project_path
+  check_completion: check_generator("complete")
 
-    tempOptions =
-      prefix: "._racertmp"
-      dir: temp_folder_path
-
-
-    temp.open tempOptions, (err, info) =>
-      if err
-        console.error(err)
-        cb null
-      else
-        tempFilePath = info.path
-        cb null unless tempFilePath
-
-        text = editor.getText()
-        fs.writeFileSync tempFilePath, text
-        fs.close(info.fd);
-        options =
-          command: @racer_bin
-          args: ["complete", row + 1, col, tempFilePath]
-          stdout: (output) =>
-            parsed = @parse_single(output)
-            @candidates.push(parsed) if parsed
-            return
-          exit: (code) =>
-            @candidates = _.uniq(_.compact(_.flatten(@candidates)), (e) => e.word + e.file + e.type )
-            cb @candidates
-            temp.cleanup()
-            return
-
-        @candidates = []
-        process = new BufferedProcess(options)
-        return
-    return
+  check_definition: check_generator("find-definition")
 
   process_env_vars: ->
     config_is_valid = true
@@ -88,10 +94,13 @@ class RacerClient
 
   parse_single: (line) ->
     matches = []
-    rcrgex = /MATCH (\w*)\,\d*\,\d*\,([^\,]*)\,(\w*)\,.*\n/mg
+    rcrgex = /MATCH (\w*)\,(\d*)\,(\d*)\,([^\,]*)\,(\w*)\,.*\n/mg
     while match = rcrgex.exec(line)
-      if match?.length > 2
-        candidate = {word: match[1], file: "this", type: match[3]}
-        candidate.file = path.basename(match[2]) if path.extname(match[2]) != ".racertmp"
+      if match?.length > 4
+        candidate = {word: match[1], line: parseInt(match[2], 10), column: parseInt(match[3], 10), filePath: match[4], file: "this", type: match[5]}
+        if path.extname(match[4]).indexOf(".racertmp_") == 0
+          candidate.filePath = match[4].replace(/\.racertmp_.*?$/, "")
+        else
+          candidate.file = path.basename(match[4])
         matches.push(candidate)
     return matches
