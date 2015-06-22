@@ -25,7 +25,7 @@ class RacerClient
         temp_folder_path = @project_path
 
       tempOptions =
-        prefix: original_file_name + ".racertmp_"
+        prefix: "._" + original_file_name + ".racertmp"
         dir: temp_folder_path
 
 
@@ -98,9 +98,10 @@ class RacerClient
     while match = rcrgex.exec(line)
       if match?.length > 4
         candidate = {word: match[1], line: parseInt(match[2], 10), column: parseInt(match[3], 10), filePath: match[4], file: "this", type: match[5]}
-        if path.extname(match[4]).indexOf(".racertmp_") == 0
-          candidate.filePath = match[4].replace(/\.racertmp_.*?$/, "")
+        file_name = path.basename(match[4])
+        if path.extname(match[4]).indexOf(".racertmp") == 0
+          candidate.filePath = path.dirname(match[4]) + path.sep + file_name.match(/\._(.*)\.racertmp.*?$/)[1]
         else
-          candidate.file = path.basename(match[4])
+          candidate.file = file_name
         matches.push(candidate)
     return matches

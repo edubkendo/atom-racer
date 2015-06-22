@@ -49,6 +49,7 @@ module.exports =
   deactivate: ->
     @racerProvider?.dispose()
     @racerProvider = null
+    @subscriptions?.dispose()
     return
 
   findDefinition: ->
