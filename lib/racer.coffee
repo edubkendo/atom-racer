@@ -22,7 +22,7 @@ module.exports =
       order: 3
     show:
       title: 'Show position for editor with definition'
-      description: 'Choose one: Right, or New'
+      description: 'Choose one: Right, or New. If your view is vertically split, choosing Right will open the definition in the rightmost pane.'
       type: 'string'
       default: 'New'
       enum: ['Right', 'New']
