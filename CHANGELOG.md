@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.15.1 (2015-06-24)
+Broken suggestions bug fix.
+
+## v0.15.0 (2015-06-22)
+Add a "find definition" feature.
+
 ## v0.14.2 (2015-06-19)
 Update the README to mention our dependency on the language-rust package.
 
