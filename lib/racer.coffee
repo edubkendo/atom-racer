@@ -44,7 +44,8 @@ module.exports =
     @racerProvider = new RacerProvider()
     return @racerProvider
 
-  provideAutocompletion: @getRacerProvider
+  provideAutocompletion: ->
+    @getRacerProvider()
 
   deactivate: ->
     @racerProvider?.dispose()
