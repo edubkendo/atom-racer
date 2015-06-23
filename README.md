@@ -1,6 +1,6 @@
 # [Racer](https://atom.io/packages/racer)
 
-> Providing intelligent code completion for Rust via [Racer](https://github.com/phildawes/racer).
+> Providing intelligent code completion and "find definition" for Rust via [Racer](https://github.com/phildawes/racer).
 
 ![A screenshot of racer at work](https://cloud.githubusercontent.com/assets/1395968/2886329/0396e8a4-d4e2-11e3-9813-f6697a01d959.gif)
 
@@ -17,15 +17,18 @@
 
 go to `Preferences > Packages`, search for `racer`, and click `Settings`
 
-| Display Name                           | Description                                                                                                       | Required | Name                          |
-|:---------------------------------------|:------------------------------------------------------------------------------------------------------------------|:---------|:------------------------------|
-| Path to the Racer executable           | Full path (including executable) of Racer's binary (e.g. `/Users/me/racer/bin/racer` or `c:\racer\bin\racer.exe`) | `YES`    | `racer.racerBinPath`          |
-| Path to the Rust source code directory | Should point to the rustc source directory (e.g. `/Users/me/code/rust/src/`)                                      | `YES`    | `racer.rustSrcPath`           |
-| Autocomplete Scope Blacklist           | Scopes for which no suggestions will be made (e.g. `.source.go .comment`)                                         | `NO`     | `racer.autocompleteBlacklist` |
+| Display Name                             | Description                                                                                                                                                        | Required | Name                          |
+|:-----------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------|:------------------------------|
+| Path to the Racer executable             | Full path (including executable) of Racer's binary (e.g. `/Users/me/racer/bin/racer` or `c:\racer\bin\racer.exe`)                                                  | `YES`    | `racer.racerBinPath`          |
+| Path to the Rust source code directory   | Should point to the rustc source directory (e.g. `/Users/me/code/rust/src/`)                                                                                       | `YES`    | `racer.rustSrcPath`           |
+| Autocomplete Scope Blacklist             | Scopes for which no suggestions will be made (e.g. `.source.go .comment`)                                                                                          | `NO`     | `racer.autocompleteBlacklist` |
+| Show position for editor with definition | Can be `Right` or `New`. If `Right` is selected and your view is vertically split, the item will be opened in the rightmost pane of the current active pane's row. | `NO`     | `racer.show`                  |
 
 ## Usage
 
 Just type some code in a `.rs` file, and racer will automatically show you some suggestions (using the autocomplete+ package provided by Atom).
+
+You can also `find definition` of your current element by pushing the `F3` key.
 
 ## FAQ:
 ### Racer doesn't work, or I see plugin errors when I type:
