@@ -69,7 +69,7 @@ class RacerClient
       conf_bin = atom.config.get("racer.racerBinPath")
       if conf_bin
         try
-          stats = fs.lstatSync(conf_bin);
+          stats = fs.statSync(conf_bin);
           if stats?.isFile()
             @racer_bin = conf_bin
     if !@racer_bin?
@@ -80,7 +80,7 @@ class RacerClient
       conf_src = atom.config.get("racer.rustSrcPath")
       if conf_src
         try
-          stats = fs.lstatSync(conf_src);
+          stats = fs.statSync(conf_src);
           if stats?.isDirectory()
             @rust_src = conf_src
     if !@rust_src?

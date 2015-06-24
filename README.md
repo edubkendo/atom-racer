@@ -17,12 +17,12 @@
 
 go to `Preferences > Packages`, search for `racer`, and click `Settings`
 
-| Display Name                             | Description                                                                                                                                                        | Required | Name                          |
-|:-----------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------|:------------------------------|
-| Path to the Racer executable             | Full path (including executable) of Racer's binary (e.g. `/Users/me/racer/bin/racer` or `c:\racer\bin\racer.exe`)                                                  | `YES`    | `racer.racerBinPath`          |
-| Path to the Rust source code directory   | Should point to the rustc source directory (e.g. `/Users/me/code/rust/src/`)                                                                                       | `YES`    | `racer.rustSrcPath`           |
-| Autocomplete Scope Blacklist             | Scopes for which no suggestions will be made (e.g. `.source.go .comment`)                                                                                          | `NO`     | `racer.autocompleteBlacklist` |
-| Show position for editor with definition | Can be `Right` or `New`. If `Right` is selected and your view is vertically split, the item will be opened in the rightmost pane of the current active pane's row. | `NO`     | `racer.show`                  |
+| Display Name                             | Description                                                                                                                                                      | Required | Name                          |
+|:-----------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------|:------------------------------|
+| Path to the Racer executable             | Full path (including executable) of Racer's binary (e.g. `/Users/me/racer/bin/racer` or `c:\racer\bin\racer.exe`)                                                | `YES`    | `racer.racerBinPath`          |
+| Path to the Rust source code directory   | Should point to the rustc source directory (e.g. `/Users/me/code/rust/src/`)                                                                                     | `YES`    | `racer.rustSrcPath`           |
+| Autocomplete Scope Blacklist             | Scopes for which no suggestions will be made (e.g. `.source.go .comment`)                                                                                        | `NO`     | `racer.autocompleteBlacklist` |
+| Show position for editor with definition | Can be `Right` or `New`. If `Right` is selected and your view is vertically split, the item will be open in the rightmost pane of the current active pane's row. | `NO`     | `racer.show`                  |
 
 ## Usage
 
