@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.15.2 (2015-06-24)
+Allow symbolic links to be used for racer executable and rustc sourcecode directory.
+
 ## v0.15.1 (2015-06-24)
 Broken suggestions bug fix.
 
