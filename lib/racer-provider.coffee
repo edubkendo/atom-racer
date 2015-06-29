@@ -30,6 +30,9 @@ class RacerProvider
       )
       return
 
+  suggestionSnippet: (word) ->
+    null
+
   suggestionText: (word) ->
     word.word
 
