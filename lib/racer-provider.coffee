@@ -30,6 +30,14 @@ class RacerProvider
       )
       return
 
+  suggestionFor: (word, prefix) ->
+    suggestion =
+      replacementPrefix: prefix
+      rightLabelHTML: "<em>(#{word.file})</em>"
+      leftLabel: word.type
+      type: @mapType(word.type)
+      text: word.word
+
   findSuggestionsForPrefix: (prefix, completions) ->
     if completions?.length
       # Sort the candidates
@@ -40,12 +48,7 @@ class RacerProvider
       for word in words when word.word isnt prefix
         # Eliminate prefixes that are counted as part of words and break the completion.
         prefix = '' if prefix.slice(-1).match(/(\)|\.|:|;)/g)
-        suggestion =
-          text: word.word
-          replacementPrefix: prefix
-          rightLabelHTML: "<em>(#{word.file})</em>"
-          leftLabel: word.type
-          type: @mapType(word.type)
+        suggestion = @suggestionFor(word, prefix)
         suggestions.push(suggestion)
 
       return suggestions
