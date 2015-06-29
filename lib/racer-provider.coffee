@@ -97,14 +97,18 @@ class RacerProvider
       [null, str]
 
 
-  snippetForParams: (params) ->
+  # Given a string of Rust params, and a snippet offset `n`, return an array
+  # of [snippet, nextOffset]. `nextOffset` should be used as the offset of the
+  # next snippet.
+  # Example: @snippetForParams('foo: T1, bar: T2', 1)
+  #            => ['${1:foo: T1}, ${2:bar: T2}', 3]
+  snippetForParams: (params, n) ->
     snippets = []
-    n = 1
     for param in @splitNested(params, /\s*,\s*/)
       snippets.push("${#{n}:#{param}}")
       n += 1
 
-    "(#{snippets.join(', ')})"
+    ["(#{snippets.join(', ')})", n + snippets.length]
 
   suggestionSnippet: (word) ->
     switch word.type
@@ -117,7 +121,8 @@ class RacerProvider
         [ret, rest] = @consumePart(rest, /->\s*(.*)\s*{/)
 
         params = signature?.slice(1, -1)
-        paramsSnippet = @snippetForParams(params)
+        n = 1
+        [paramsSnippet, n] = @snippetForParams(params, n)
         if name? && paramsSnippet?
           "#{name}#{paramsSnippet}"
 
