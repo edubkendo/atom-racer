@@ -42,7 +42,15 @@ class RacerProvider
       rightLabelHTML: "<em>(#{word.file})</em>"
       leftLabel: word.type
       type: @mapType(word.type)
-      text: @suggestionText(word)
+    snippet = @suggestionSnippet(word)
+    text = @suggestionText(word)
+
+    if snippet?
+      suggestion.snippet = snippet
+    else
+      suggestion.text = text
+
+    suggestion
 
   findSuggestionsForPrefix: (prefix, completions) ->
     if completions?.length
