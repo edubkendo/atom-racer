@@ -96,6 +96,16 @@ class RacerProvider
     else
       [null, str]
 
+  # Given a string of Rust trait params, and a snippet offset `n`, return
+  # an array of [snippet, nextOffset]. `nextOffset` should be used as the
+  # offset of the next snippet.
+  # Example: @snippetForTraits('<T: Trait1, U: Trait2>', 1)
+  #            => ['${1:::<T: Trait1, U: Trait2>}', 2]
+  snippetForTraits: (traits, n) ->
+    if traits?
+      ["${#{n}:::#{traits}}", n + 1]
+    else
+      ["", n]
 
   # Given a string of Rust params, and a snippet offset `n`, return an array
   # of [snippet, nextOffset]. `nextOffset` should be used as the offset of the
