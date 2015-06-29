@@ -132,9 +132,10 @@ class RacerProvider
 
         params = signature?.slice(1, -1)
         n = 1
+        [traitsSnippet, n] = @snippetForTraits(traits, n)
         [paramsSnippet, n] = @snippetForParams(params, n)
         if name? && paramsSnippet?
-          "#{name}#{paramsSnippet}"
+          "#{name}#{traitsSnippet}#{paramsSnippet}"
 
   suggestionText: (word) ->
     word.word
