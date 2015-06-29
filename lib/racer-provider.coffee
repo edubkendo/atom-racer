@@ -30,13 +30,16 @@ class RacerProvider
       )
       return
 
+  suggestionText: (word) ->
+    word.word
+
   suggestionFor: (word, prefix) ->
     suggestion =
       replacementPrefix: prefix
       rightLabelHTML: "<em>(#{word.file})</em>"
       leftLabel: word.type
       type: @mapType(word.type)
-      text: word.word
+      text: @suggestionText(word)
 
   findSuggestionsForPrefix: (prefix, completions) ->
     if completions?.length
