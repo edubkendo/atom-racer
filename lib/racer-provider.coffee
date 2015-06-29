@@ -107,7 +107,19 @@ class RacerProvider
     "(#{snippets.join(', ')})"
 
   suggestionSnippet: (word) ->
-    null
+    switch word.type
+      when 'Function'
+        rest = word.context
+        [decl, rest] = @consumePart(rest, /(pub)?\s*fn\s+/)
+        [name, rest] = @consumePart(rest, /\w+/)
+        [traits, rest] = @consumeDelimited(rest, ['<', '>'])
+        [signature, rest] = @consumeDelimited(rest, ['(', ')'])
+        [ret, rest] = @consumePart(rest, /->\s*(.*)\s*{/)
+
+        params = signature?.slice(1, -1)
+        paramsSnippet = @snippetForParams(params)
+        if name? && paramsSnippet?
+          "#{name}#{paramsSnippet}"
 
   suggestionText: (word) ->
     word.word
