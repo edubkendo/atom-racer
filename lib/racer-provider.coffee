@@ -96,6 +96,16 @@ class RacerProvider
     else
       [null, str]
 
+
+  snippetForParams: (params) ->
+    snippets = []
+    n = 1
+    for param in @splitNested(params, /\s*,\s*/)
+      snippets.push("${#{n}:#{param}}")
+      n += 1
+
+    "(#{snippets.join(', ')})"
+
   suggestionSnippet: (word) ->
     null
 
