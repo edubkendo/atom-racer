@@ -63,12 +63,13 @@ class RacerProvider
 
   # If the start of `str` matches the regex/substring `matcher`, then
   # return an array consisting of [matched part, remaining part]; else,
-  # return [null, str].
-  # Example: @consumePart('foobar', /fo+/) => ['foo', 'bar']
+  # return [null, str]. Given a regex `matcher`, matched groups will be
+  # stored in third element of the array.
+  # Example: @consumePart('foobar', /fo+/) => ['foo', 'bar', <regex matches>]
   consumePart: (str, matcher) ->
     match = str?.match(matcher)
     if match?.index == 0
-      [match[0], str.slice(match[0].length)]
+      [match[0], str.slice(match[0].length), match]
     else
       [null, str]
 
