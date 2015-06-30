@@ -168,13 +168,16 @@ class RacerProvider
       rightLabelHTML: "<em>(#{word.file})</em>"
       leftLabel: word.type
       type: @mapType(word.type)
+
     snippet = @suggestionSnippet(word)
     text = @suggestionText(word)
+    displayText = @functionDisplay(word) || snippet || text
 
     if snippet?
       suggestion.snippet = snippet
     else
       suggestion.text = text
+    suggestion.displayText = _.escape(displayText)
 
     suggestion
 
