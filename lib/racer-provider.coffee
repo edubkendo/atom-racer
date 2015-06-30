@@ -129,7 +129,9 @@ class RacerProvider
         [name, rest] = @consumePart(rest, /\w+/)
         [traits, rest] = @consumeDelimited(rest, ['<', '>'])
         [signature, rest] = @consumeDelimited(rest, ['(', ')'])
-        [ret, rest] = @consumePart(rest, /->\s*(.*)\s*{/)
+        [__, rest, ret] = @consumePart(rest, /\s*->\s*([^{]*)\s*(?:{)?/)
+
+        ret = ret?[1]?.trim?()
 
         decl: decl
         name: name
