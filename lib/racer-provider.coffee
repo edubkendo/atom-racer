@@ -155,6 +155,13 @@ class RacerProvider
   suggestionText: (word) ->
     word.word
 
+  functionDisplay: (word) ->
+    switch word.type
+      when 'Function'
+        {name, traits, signature, ret} = @functionDetails(word)
+        returnArrow = if ret? then " -> #{ret}" else ''
+        [name, traits, signature, returnArrow].join('')
+
   suggestionFor: (word, prefix) ->
     suggestion =
       replacementPrefix: prefix
