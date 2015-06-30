@@ -113,9 +113,14 @@ class RacerProvider
   # next snippet.
   # Example: @snippetForParams('foo: T1, bar: T2', 1)
   #            => ['${1:foo: T1}, ${2:bar: T2}', 3]
-  snippetForParams: (params, n) ->
+  snippetForParams: (paramString, n) ->
     snippets = []
-    for param in @splitNested(params, /\s*,\s*/)
+    params = @splitNested(paramString, /\s*,\s*/)
+
+    if params?[0]?.match?(/self/)?
+      params.shift()
+
+    for param in params
       snippets.push("${#{n}:#{param}}")
       n += 1
 
