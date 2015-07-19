@@ -130,7 +130,7 @@ class RacerProvider
     switch word.type
       when 'Function'
         rest = word.context
-        [decl, rest] = @consumePart(rest, /(pub)?\s*fn\s+/)
+        [decl, rest] = @consumePart(rest, /((pub|unsafe|extern|const)\s*)*\s*fn\s+/)
         [name, rest] = @consumePart(rest, /\w+/)
         [traits, rest] = @consumeDelimited(rest, ['<', '>'])
         [signature, rest] = @consumeDelimited(rest, ['(', ')'])
