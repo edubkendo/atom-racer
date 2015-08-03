@@ -14,7 +14,7 @@ class RacerClient
   check_generator = (racer_action) ->
     (editor, row, col, cb) ->
       if !@process_env_vars()
-        console.error("Your racer package is not properly configured.")
+        atom.notifications.addFatalError "Atom racer is not properly configured."
         cb null
         return
 
@@ -31,7 +31,7 @@ class RacerClient
 
       temp.open tempOptions, (err, info) =>
         if err
-          console.error(err)
+          atom.notifications.addFatalError "Unable to create temp file: #{err}"
           cb null
         else
           tempFilePath = info.path
@@ -51,6 +51,10 @@ class RacerClient
               @candidates = _.uniq(_.compact(_.flatten(@candidates)), (e) => e.word + e.file + e.type )
               cb @candidates
               temp.cleanup()
+              if code == 3221225781
+                atom.notifications.addWarning "racer could not find a required DLL; copy racer to your Rust bin directory"
+              else if code != 0
+                atom.notifications.addWarning "racer returned a non-zero exit code: #{code}"
               return
 
           @candidates = []
@@ -74,7 +78,7 @@ class RacerClient
             @racer_bin = conf_bin
     if !@racer_bin?
       config_is_valid = false
-      console.error("racer.racerBinPath should point to the Racer binary executable")
+      atom.notifications.addFatalError "racer.racerBinPath is not set in your config."
 
     if !@rust_src?
       conf_src = atom.config.get("racer.rustSrcPath")
@@ -85,7 +89,7 @@ class RacerClient
             @rust_src = conf_src
     if !@rust_src?
       config_is_valid = false
-      console.error("racer.rustSrcPath should point to the Rustc sourcecode directory")
+      atom.notifications.addFatalError "racer.rustSrcPath is not set in your config."
 
     if config_is_valid
       process.env.RUST_SRC_PATH = @rust_src
