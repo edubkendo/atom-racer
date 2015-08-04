@@ -182,7 +182,7 @@ class RacerProvider
       suggestion.snippet = snippet
     else
       suggestion.text = text
-    suggestion.displayText = _.escape(displayText)
+    suggestion.displayText = displayText
 
     suggestion
 
