@@ -98,10 +98,12 @@ class RacerClient
 
   parse_single: (line) ->
     matches = []
-    rcrgex = /MATCH (\w*)\,(\d*)\,(\d*)\,([^\,]*)\,(\w*)\,.*\n/mg
+    rcrgex = /MATCH (\w*)\,(\d*)\,(\d*)\,([^\,]*)\,(\w*)\,(.*)\n/mg
+    fnrgx = /( -> .*)/
     while match = rcrgex.exec(line)
+      fnmatch = match[6].match(fnrgx)
       if match?.length > 4
-        candidate = {word: match[1], line: parseInt(match[2], 10), column: parseInt(match[3], 10), filePath: match[4], file: "this", type: match[5]}
+        candidate = {word: match[1] + (fnmatch && fnmatch[0] || ""), line: parseInt(match[2], 10), column: parseInt(match[3], 10), filePath: match[4], file: "this", type: match[5]}
         file_name = path.basename(match[4])
         if path.extname(match[4]).indexOf(".racertmp") == 0
           candidate.filePath = path.dirname(match[4]) + path.sep + file_name.match(/\._(.*)\.racertmp.*?$/)[1]
