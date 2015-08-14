@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.17.0 (2015-08-14)
+Adds snippet functionality and shows return type of functions.
+
 ## v0.16.0 (2015-08-04)
 Alert users with useful notifications when error conditions occur.
 
