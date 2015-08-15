@@ -49,7 +49,7 @@ class RacerClient
               return
             stderr: (output) =>
                 @last_stderr = output
-                preturn
+                return
             exit: (code) =>
               @candidates = _.uniq(_.compact(_.flatten(@candidates)), (e) => e.word + e.file + e.type )
               cb @candidates
