@@ -10,6 +10,7 @@ class RacerClient
   rust_src: null
   project_path: null
   candidates: null
+  last_stderr: null
 
   check_generator = (racer_action) ->
     (editor, row, col, cb) ->
@@ -27,7 +28,6 @@ class RacerClient
       tempOptions =
         prefix: "._" + original_file_name + ".racertmp"
         dir: temp_folder_path
-
 
       temp.open tempOptions, (err, info) =>
         if err
@@ -47,6 +47,9 @@ class RacerClient
               parsed = @parse_single(output)
               @candidates.push(parsed) if parsed
               return
+            stderr: (output) =>
+                @last_stderr = output
+                preturn
             exit: (code) =>
               @candidates = _.uniq(_.compact(_.flatten(@candidates)), (e) => e.word + e.file + e.type )
               cb @candidates
@@ -54,7 +57,7 @@ class RacerClient
               if code == 3221225781
                 atom.notifications.addWarning "racer could not find a required DLL; copy racer to your Rust bin directory"
               else if code != 0
-                atom.notifications.addWarning "racer returned a non-zero exit code: #{code}"
+                atom.notifications.addWarning "racer returned a non-zero exit code: #{code}\n#{@last_stderr}"
               return
 
           @candidates = []
