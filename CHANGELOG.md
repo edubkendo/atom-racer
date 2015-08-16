@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.17.1 (2015-08-16)
+Prints error from stderr if there is any.
+
 ## v0.17.0 (2015-08-14)
 Adds snippet functionality and shows return type of functions.
 
