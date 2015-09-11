@@ -11,6 +11,7 @@ class RacerClient
   project_path: null
   candidates: null
   last_stderr: null
+  last_process: null
 
   check_generator = (racer_action) ->
     (editor, row, col, cb) ->
@@ -44,13 +45,16 @@ class RacerClient
             command: @racer_bin
             args: [racer_action, row + 1, col, tempFilePath]
             stdout: (output) =>
+              return unless this_process == @latest_process
               parsed = @parse_single(output)
               @candidates.push(parsed) if parsed
               return
             stderr: (output) =>
+                return unless this_process == @latest_process
                 @last_stderr = output
                 return
             exit: (code) =>
+              return unless this_process == @latest_process
               @candidates = _.uniq(_.compact(_.flatten(@candidates)), (e) => e.word + e.file + e.type )
               cb @candidates
               temp.cleanup()
@@ -61,7 +65,7 @@ class RacerClient
               return
 
           @candidates = []
-          process = new BufferedProcess(options)
+          @latest_process = this_process = new BufferedProcess(options)
           return
       return
 
