@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.17.2 (2015-09-11)
+Workaround for race condition caused by multiple racer processes being opened as the user types.
+
 ## v0.17.1 (2015-08-16)
 Prints error from stderr if there is any.
 
