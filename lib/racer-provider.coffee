@@ -9,6 +9,7 @@ class RacerProvider
   racerClient: null
 
   constructor: ->
+    console.log 'creating a new racer client'
     @disableForSelector = atom.config.get('racer.autocompleteBlacklist')
     @racerClient = new RacerClient
 
@@ -35,31 +36,31 @@ class RacerProvider
   # Example: @splitNested('foo; (bar; baz); qux', /;\s+/)
   #            => ['foo', '(bar; baz)', 'qux']
   splitNested: (str, split) ->
-      depth = 0
+    depth = 0
 
-      openDelims = ['(', '<', '[']
-      closeDelims = [')', '>', ']']
+    openDelims = ['(', '<', '[']
+    closeDelims = [')', '>', ']']
 
-      splits = []
+    splits = []
 
-      lastSplit = 0
-      i = 0
-      while i < str?.length
-          match = str.slice(i).match(split)
-          shouldSplit = depth == 0 && match?.index == 0
+    lastSplit = 0
+    i = 0
+    while i < str?.length
+      match = str.slice(i).match(split)
+      shouldSplit = depth == 0 && match?.index == 0
 
-          if openDelims.indexOf(str[i]) >= 0
-              depth += 1
-          else if closeDelims.indexOf(str[i]) >= 0
-              depth -= 1
-          else if shouldSplit
-              splits.push(str.slice(lastSplit, i))
-              lastSplit = i + match[0].length
+      if openDelims.indexOf(str[i]) >= 0
+        depth += 1
+      else if closeDelims.indexOf(str[i]) >= 0
+        depth -= 1
+      else if shouldSplit
+        splits.push(str.slice(lastSplit, i))
+        lastSplit = i + match[0].length
 
-          i += 1
+        i += 1
 
-      splits.push(str?.slice(lastSplit))
-      splits
+    splits.push(str?.slice(lastSplit))
+    splits
 
   # If the start of `str` matches the regex/substring `matcher`, then
   # return an array consisting of [matched part, remaining part]; else,
@@ -189,7 +190,7 @@ class RacerProvider
   findSuggestionsForPrefix: (prefix, completions) ->
     if completions?.length
       # Sort the candidates
-      words = _.sortBy( completions, (e) => e.word )
+      words = _.sortBy( completions, (e) -> e.word )
 
       # Builds suggestions for the candidate words
       suggestions = []
