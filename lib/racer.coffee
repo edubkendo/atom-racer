@@ -14,19 +14,25 @@ module.exports =
       type: 'string'
       default: '/usr/local/src/rust/src/'
       order: 2
+    cargoHome:
+      title: 'Cargo home directory (optional)'
+      type: 'string'
+      description: 'Needed when providing completions for Cargo crates when Cargo is installed in a non-standard location.'
+      default: ''
+      order: 3
     autocompleteBlacklist:
       title: 'Autocomplete Scope Blacklist'
       description: 'Autocomplete suggestions will not be shown when the cursor is inside the following comma-delimited scope(s).'
       type: 'string'
       default: '.source.go .comment'
-      order: 3
+      order: 4
     show:
       title: 'Show position for editor with definition'
       description: 'Choose one: Right, or New. If your view is vertically split, choosing Right will open the definition in the rightmost pane.'
       type: 'string'
       default: 'New'
       enum: ['Right', 'New']
-      order: 4
+      order: 5
   # members
   racerProvider: null
   subscriptions: null
