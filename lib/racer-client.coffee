@@ -109,7 +109,8 @@ class RacerClient
 
     if config_is_valid
       process.env.RUST_SRC_PATH = @rust_src
-      process.env.CARGO_HOME = @cargo_home
+      if @cargo_home?
+        process.env.CARGO_HOME = @cargo_home
 
     return config_is_valid
 
