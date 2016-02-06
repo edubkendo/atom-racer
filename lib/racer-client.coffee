@@ -8,6 +8,7 @@ module.exports =
 class RacerClient
   racer_bin: null
   rust_src: null
+  cargo_home: null
   project_path: null
   candidates: null
   last_stderr: null
@@ -98,8 +99,18 @@ class RacerClient
       config_is_valid = false
       atom.notifications.addFatalError "racer.rustSrcPath is not set in your config."
 
+    if !@cargo_home?
+      home = atom.config.get("racer.cargoHome")
+      if home
+        try
+          stats = fs.statSync(home);
+          if stats?.isDirectory()
+            @cargo_home = home
+
     if config_is_valid
       process.env.RUST_SRC_PATH = @rust_src
+      if @cargo_home?
+        process.env.CARGO_HOME = @cargo_home
 
     return config_is_valid
 
