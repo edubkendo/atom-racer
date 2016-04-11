@@ -41,8 +41,8 @@ module.exports =
     @subscriptions = new CompositeDisposable
 
     # Register command that does find-definition
-    @subscriptions.add atom.commands.add 'atom-workspace', 'racer:find-definition': =>
-      @findDefinition()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'racer:find-definition': (e)=>
+      @findDefinition(e)
 
   getRacerProvider: ->
     return @racerProvider if @racerProvider?
@@ -59,11 +59,12 @@ module.exports =
     @subscriptions?.dispose()
     return
 
-  findDefinition: ->
+  findDefinition: (e)->
     textEditor = atom.workspace.getActiveTextEditor()
     grammar = textEditor?.getGrammar()
 
     if !grammar or grammar.name != 'Rust' or textEditor.hasMultipleCursors()
+      e.abortKeyBinding()
       return
 
     cursorPosition = textEditor.getCursorBufferPosition()
