@@ -36,6 +36,8 @@ module.exports =
   # members
   racerProvider: null
   subscriptions: null
+  maybeIdentifier: /^[$0-9\w]+$/
+  invalidScopes: ["core", "keyword", "comment", "language", "quoted", "modifier", "storage.type.rust"]
 
   activate: (state) ->
     @subscriptions = new CompositeDisposable
@@ -53,6 +55,46 @@ module.exports =
   provideAutocompletion: ->
     @getRacerProvider()
 
+  provideHyperclick: ->
+    return {
+      getSuggestionForWord: (textEditor, text, range) =>
+        grammar = textEditor.getGrammar()
+        if !grammar or grammar.name != 'Rust' or textEditor.hasMultipleCursors()
+          return
+
+        scopeDescriptor = textEditor.scopeDescriptorForBufferPosition(range.start)
+        if not (text.match @maybeIdentifier) or @isNonIdentifier(scopeDescriptor)
+          return
+
+        return {
+          range: range
+          callback: =>
+            @getRacerProvider().racerClient.check_definition(textEditor, range.start.row, range.start.column, @goToDefinition)
+        }
+    }
+
+  isNonIdentifier: (scopeDescriptor) ->
+    return @invalidScopes.some((invalid) -> scopeDescriptor.getScopesArray().some((scope) -> (scope.indexOf invalid) > -1))
+
+  goToDefinition: (defs) ->
+    return if _.isEmpty(defs)
+    def = defs[0]
+
+    textEditors = atom.workspace.getTextEditors()
+    textEditor = _.find(textEditors, (te) => te.getPath() == def.filePath)
+    if textEditor?
+      pane = atom.workspace.paneForItem(textEditor)
+      pane.activate()
+      pane.activateItem(textEditor)
+      textEditor.setCursorBufferPosition([def.line-1, def.column])
+    else
+      newEditorPosition = atom.config.get 'racer.show'
+      options = {initialLine: def.line-1, initialColumn: def.column}
+      options.split = newEditorPosition.toLowerCase() if newEditorPosition != 'New'
+      atom.workspace.open(def.filePath, options).then((te) =>
+        te.scrollToCursorPosition()
+      )
+
   deactivate: ->
     @racerProvider?.dispose()
     @racerProvider = null
@@ -68,22 +110,8 @@ module.exports =
       return
 
     cursorPosition = textEditor.getCursorBufferPosition()
-    @getRacerProvider().racerClient.check_definition(textEditor, cursorPosition.row, cursorPosition.column, (defs) =>
-      return if _.isEmpty(defs)
-      def = defs[0]
-
-      textEditors = atom.workspace.getTextEditors()
-      textEditor = _.find(textEditors, (te) => te.getPath() == def.filePath)
-      if textEditor?
-        pane = atom.workspace.paneForItem(textEditor)
-        pane.activate()
-        pane.activateItem(textEditor)
-        textEditor.setCursorBufferPosition([def.line-1, def.column])
-      else
-        newEditorPosition = atom.config.get 'racer.show'
-        options = {initialLine: def.line-1, initialColumn: def.column}
-        options.split = newEditorPosition.toLowerCase() if newEditorPosition != 'New'
-        atom.workspace.open(def.filePath, options).then((te) =>
-          te.scrollToCursorPosition()
-        )
-    )
+    scopeDescriptor = textEditor.scopeDescriptorForBufferPosition(cursorPosition)
+    if @isNonIdentifier(scopeDescriptor)
+      e.abortKeyBinding()
+      return
+    @getRacerProvider().racerClient.check_definition(textEditor, cursorPosition.row, cursorPosition.column, @goToDefinition)

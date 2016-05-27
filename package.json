@@ -33,6 +33,11 @@
     "temp": "~0.8.1"
   },
   "providedServices": {
+    "hyperclick.provider": {
+      "versions": {
+        "0.0.0": "provideHyperclick"
+      }
+    },
     "autocomplete.provider": {
       "description": "Intelligent Rust code completion",
       "versions": {
