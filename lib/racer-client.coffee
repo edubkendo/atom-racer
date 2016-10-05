@@ -1,7 +1,6 @@
 {BufferedProcess} = require 'atom'
 _ = require 'underscore-plus'
 fs = require 'fs'
-temp = require('temp').track()
 path = require 'path'
 
 module.exports =
@@ -21,53 +20,32 @@ class RacerClient
         cb null
         return
 
-      temp_folder_path = path.dirname(editor.getPath())
-      original_file_name = path.basename(editor.getPath())
-      # temp_folder_path will be '.' for unsaved files
-      if temp_folder_path == "."
-        temp_folder_path = @project_path
-
-      tempOptions =
-        prefix: "._" + original_file_name + ".racertmp"
-        dir: temp_folder_path
-
-      temp.open tempOptions, (err, info) =>
-        if err
-          atom.notifications.addFatalError "Unable to create temp file: #{err}"
-          cb null
-        else
-          tempFilePath = info.path
-          cb null unless tempFilePath
-
-          text = editor.getText()
-          fs.writeFileSync tempFilePath, text
-          fs.close(info.fd);
-          options =
-            command: @racer_bin
-            args: [racer_action, row + 1, col, tempFilePath]
-            stdout: (output) =>
-              return unless this_process == @latest_process
-              parsed = @parse_single(output)
-              @candidates.push(parsed) if parsed
-              return
-            stderr: (output) =>
-                return unless this_process == @latest_process
-                @last_stderr = output
-                return
-            exit: (code) =>
-              return unless this_process == @latest_process
-              @candidates = _.uniq(_.compact(_.flatten(@candidates)), (e) => e.word + e.file + e.type )
-              cb @candidates
-              temp.cleanup()
-              if code == 3221225781
-                atom.notifications.addWarning "racer could not find a required DLL; copy racer to your Rust bin directory"
-              else if code != 0
-                atom.notifications.addWarning "racer returned a non-zero exit code: #{code}\n#{@last_stderr}"
-              return
-
-          @candidates = []
-          @latest_process = this_process = new BufferedProcess(options)
+      options =
+        command: @racer_bin
+        args: [racer_action, row + 1, col, editor.getPath(), "-"]
+        stdout: (output) =>
+          return unless this_process == @latest_process
+          parsed = @parse_single(output)
+          @candidates.push(parsed) if parsed
           return
+        stderr: (output) =>
+            return unless this_process == @latest_process
+            @last_stderr = output
+            return
+        exit: (code) =>
+          return unless this_process == @latest_process
+          @candidates = _.uniq(_.compact(_.flatten(@candidates)), (e) => e.word + e.file + e.type )
+          cb @candidates
+          if code == 3221225781
+            atom.notifications.addWarning "racer could not find a required DLL; copy racer to your Rust bin directory"
+          else if code != 0
+            atom.notifications.addWarning "racer returned a non-zero exit code: #{code}\n#{@last_stderr}"
+          return
+
+      @candidates = []
+      @latest_process = this_process = new BufferedProcess(options)
+      this_process.process.stdin.write editor.getText()
+      this_process.process.stdin.end()
       return
 
   check_completion: check_generator("complete")

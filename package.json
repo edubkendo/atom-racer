@@ -29,8 +29,7 @@
     "atom": ">0.50.0"
   },
   "dependencies": {
-    "underscore-plus": "~1.6.6",
-    "temp": "~0.8.1"
+    "underscore-plus": "~1.6.6"
   },
   "providedServices": {
     "autocomplete.provider": {
