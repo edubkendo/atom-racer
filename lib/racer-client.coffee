@@ -95,9 +95,6 @@ class RacerClient
           stats = fs.statSync(conf_src);
           if stats?.isDirectory()
             @rust_src = conf_src
-    if !@rust_src?
-      config_is_valid = false
-      atom.notifications.addFatalError "racer.rustSrcPath is not set in your config."
 
     if !@cargo_home?
       home = atom.config.get("racer.cargoHome")
@@ -108,7 +105,8 @@ class RacerClient
             @cargo_home = home
 
     if config_is_valid
-      process.env.RUST_SRC_PATH = @rust_src
+      if @rust_src?
+        process.env.RUST_SRC_PATH = @rust_src
       if @cargo_home?
         process.env.CARGO_HOME = @cargo_home
 
