@@ -187,6 +187,8 @@ class RacerProvider
     suggestion
 
   findSuggestionsForPrefix: (prefix, completions) ->
+    if prefix.slice(-1).match(/;/g)
+      return []
     if completions?.length
       # Sort the candidates
       words = _.sortBy( completions, (e) => e.word )
